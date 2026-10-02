@@ -42,47 +42,45 @@ Call `window.formAutofill` from any client component on an allowed site:
 try {
   await window.formAutofill({
     data: {
-      first_name: "Kajal",
-      last_name:  "Gangani",
-      email:      "guest@example.com",
-      mobile_no:  "9820355183",
-      phone_no:   "9820355183",
-      dob:        "05-05-1993",
-      address:    "123 Main St",
-      locality:   "Thane",
-      city:       "Thane",
-      district:   "Thane",
-      zip_code:   "400604",
-      country:    "india",
-      state:      "maharashtra",
-      coming_from:  "Thane",
-      going_to:     "Thane",
-      doc_type:   "aadhar card",
-      doc_no:     "270715127847",
-      room_no:    "306",
-      checkin_date:  "03-06-2023",
-      checkin_time:  "14:00",
-      checkout_date: "04-06-2023",
-      checkout_time: "12:00",
-      child:  0,
-      adult:  2,
-      vehicle_type: "Other",
-      vehicle_registration_no: "",
+      first_name: 'Kajal',
+      last_name: 'Gangani',
+      email: 'guest@example.com',
+      mobile_no: '9820355183',
+      phone_no: '9820355183',
+      dob: '05-05-1993',
+      address: '123 Main St',
+      locality: 'Thane',
+      city: 'Thane',
+      district: 'Thane',
+      zip_code: '400604',
+      country: 'india',
+      state: 'maharashtra',
+      coming_from: 'Thane',
+      going_to: 'Thane',
+      doc_type: 'aadhar card',
+      doc_no: '270715127847',
+      room_no: '306',
+      checkin_date: '03-06-2023',
+      checkin_time: '14:00',
+      child: 0,
+      adult: 2,
+      vehicle_type: 'Other',
+      vehicle_registration_no: '',
       other_guests: [
         {
-          other_full_name:       "Bhavesh Tank",
-          other_mobile_number:   "9820355183",
-          other_doc_type:        "aadhar card",
-          other_document_number: "958952493001"
-        }
-      ]
-    }
+          other_full_name: 'Bhavesh Tank',
+          other_mobile_number: '9820355183',
+          other_doc_type: 'aadhar card',
+          other_document_number: '958952493001',
+        },
+      ],
+    },
   });
 } catch (err) {
-  if (err.message === "data exist") {
+  if (err.message === 'data exist') {
     // same name + check-in date already stored
   }
-  if (err.message.includes("not a valid option")) {
+  if (err.message.includes('not a valid option')) {
     // a select field value didn't match any option on the page
   }
 }
@@ -104,12 +102,12 @@ try {
 
 Saves a guest entry. Returns a Promise.
 
-| Outcome | Result |
-|---|---|
-| Entry saved | `Promise` resolves `{ success: true }` |
-| Duplicate (same name + check-in date) | `Promise` rejects `Error("data exist")` |
-| Select value not in page options | `Promise` rejects `Error('"value" is not a valid option for "field"')` |
-| Timeout after 10 s | `Promise` rejects `Error("Form Autofill: request timed out")` |
+| Outcome                               | Result                                                                 |
+| ------------------------------------- | ---------------------------------------------------------------------- |
+| Entry saved                           | `Promise` resolves `{ success: true }`                                 |
+| Duplicate (same name + check-in date) | `Promise` rejects `Error("data exist")`                                |
+| Select value not in page options      | `Promise` rejects `Error('"value" is not a valid option for "field"')` |
+| Timeout after 10 s                    | `Promise` rejects `Error("Form Autofill: request timed out")`          |
 
 ### `window.formAutofill.getEntries()`
 
@@ -120,9 +118,9 @@ const { entries } = await window.formAutofill.getEntries();
 // entries: array of guest objects, oldest first
 ```
 
-| Outcome | Result |
-|---|---|
-| Success | `Promise` resolves `{ entries: [...] }` |
+| Outcome           | Result                                                           |
+| ----------------- | ---------------------------------------------------------------- |
+| Success           | `Promise` resolves `{ entries: [...] }`                          |
 | Timeout after 5 s | `Promise` rejects `Error("Form Autofill: getEntries timed out")` |
 
 ### Detection properties
@@ -134,10 +132,10 @@ if (window.formAutofill?.isInstalled) {
 console.log(window.formAutofill.version); // "1.0.0"
 ```
 
-| Property | Value |
-|---|---|
-| `window.formAutofill.isInstalled` | `true` |
-| `window.formAutofill.version` | `"1.0.0"` |
+| Property                          | Value     |
+| --------------------------------- | --------- |
+| `window.formAutofill.isInstalled` | `true`    |
+| `window.formAutofill.version`     | `"1.0.0"` |
 
 ---
 
@@ -157,12 +155,12 @@ console.log(window.formAutofill.version); // "1.0.0"
 
 Open via: right-click extension icon → **Options**
 
-| Tab | Description |
-|---|---|
-| **General** | Preview stored entries as expandable cards; load 3 sample guests or clear all entries |
-| **Settings** | Add or remove allowed websites (supports `localhost` and any valid domain) |
+| Tab                 | Description                                                                            |
+| ------------------- | -------------------------------------------------------------------------------------- |
+| **General**         | Preview stored entries as expandable cards; load 3 sample guests or clear all entries  |
+| **Settings**        | Add or remove allowed websites (supports `localhost` and any valid domain)             |
 | **Developer Guide** | Full API usage example, `getEntries()` docs, return value table, and storage behaviour |
-| **Help** | Step-by-step usage guide and troubleshooting FAQ |
+| **Help**            | Step-by-step usage guide and troubleshooting FAQ                                       |
 
 ### Entry cards
 
@@ -193,6 +191,7 @@ pathik-autofill/
 ## Development
 
 **Regenerate icons** (requires Node.js):
+
 ```bash
 node generate_icons.js
 ```

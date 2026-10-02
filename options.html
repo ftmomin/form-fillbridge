@@ -1,93 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Form FillBridge — Settings</title>
-  <link rel="stylesheet" href="options.css" />
-</head>
-<body>
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <img src="icons/icon48.png" alt="" width="30" height="30" />
-      <span class="sidebar-title">Form FillBridge</span>
-    </div>
-
-    <nav class="sidebar-nav">
-      <button type="button" class="nav-item" data-tab="general">General</button>
-      <button type="button" class="nav-item" data-tab="settings">Settings</button>
-      <button type="button" class="nav-item" data-tab="developer">Developer Guide</button>
-      <button type="button" class="nav-item" data-tab="help">Help</button>
-    </nav>
-
-    <span class="sidebar-version">v1.0.0</span>
-  </aside>
-
-  <main class="content">
-
-    <!-- General -->
-    <section class="tab" id="tab-general">
-      <h1 class="tab-title">General</h1>
-
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Test Data</h2>
-          <p class="card-desc">
-            Load sample guest entries into storage so you can test the autofill
-            dropdown on pathik.guru without calling <code>window.formAutofill()</code> manually.
-          </p>
-        </div>
-        <div class="test-actions">
-          <button type="button" id="load-samples-btn" class="btn btn-primary">Load Sample Data</button>
-          <button type="button" id="clear-data-btn"   class="btn btn-danger">Clear All Entries</button>
-        </div>
-        <p id="test-status" class="test-status hidden"></p>
-
-        <div id="current-entries" class="current-entries"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form FillBridge — Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="icons/icon48.png" alt="" width="30" height="30" />
+        <span class="sidebar-title">Form FillBridge</span>
       </div>
-    </section>
 
-    <!-- Settings -->
-    <section class="tab" id="tab-settings">
-      <h1 class="tab-title">Settings</h1>
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-item" data-tab="general">
+          General
+        </button>
+        <button type="button" class="nav-item" data-tab="settings">
+          Settings
+        </button>
+        <button type="button" class="nav-item" data-tab="developer">
+          Developer Guide
+        </button>
+        <button type="button" class="nav-item" data-tab="help">Help</button>
+      </nav>
 
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">Allowed Websites</h2>
+      <span class="sidebar-version">v1.0.0</span>
+    </aside>
+
+    <main class="content">
+      <!-- General -->
+      <section class="tab" id="tab-general">
+        <h1 class="tab-title">General</h1>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Test Data</h2>
+            <p class="card-desc">
+              Load sample guest entries into storage so you can test the
+              autofill dropdown on pathik.guru without calling
+              <code>window.formAutofill()</code> manually.
+            </p>
+          </div>
+          <div class="test-actions">
+            <button type="button" id="load-samples-btn" class="btn btn-primary">
+              Load Sample Data
+            </button>
+            <button type="button" id="clear-data-btn" class="btn btn-danger">
+              Clear All Entries
+            </button>
+          </div>
+          <p id="test-status" class="test-status hidden"></p>
+
+          <div id="current-entries" class="current-entries"></div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="tab" id="tab-settings">
+        <h1 class="tab-title">Settings</h1>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Allowed Websites</h2>
+            <p class="card-desc">
+              The autofill context menu and form filling only activate on these
+              domains. Add any site where you want the extension to work.
+            </p>
+          </div>
+
+          <div class="add-row">
+            <input
+              type="text"
+              id="site-input"
+              class="site-input"
+              placeholder="e.g. pathik.guru"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button type="button" id="add-btn" class="btn btn-primary">
+              Add Site
+            </button>
+          </div>
+          <p id="site-error" class="error-msg hidden"></p>
+
+          <ul id="sites-list" class="sites-list"></ul>
+        </div>
+      </section>
+
+      <!-- Developer Guide -->
+      <section class="tab" id="tab-developer">
+        <h1 class="tab-title">Developer Guide</h1>
+
+        <div class="card">
+          <h2 class="card-title">Storing Guest Data</h2>
           <p class="card-desc">
-            The autofill context menu and form filling only activate on these domains.
-            Add any site where you want the extension to work.
+            Call <code>window.formAutofill</code> from any client component on
+            an allowed site. The function returns a Promise that resolves on
+            success or rejects with a descriptive error.
           </p>
-        </div>
-
-        <div class="add-row">
-          <input
-            type="text"
-            id="site-input"
-            class="site-input"
-            placeholder="e.g. pathik.guru"
-            autocomplete="off"
-            spellcheck="false"
-          />
-          <button type="button" id="add-btn" class="btn btn-primary">Add Site</button>
-        </div>
-        <p id="site-error" class="error-msg hidden"></p>
-
-        <ul id="sites-list" class="sites-list"></ul>
-      </div>
-    </section>
-
-    <!-- Developer Guide -->
-    <section class="tab" id="tab-developer">
-      <h1 class="tab-title">Developer Guide</h1>
-
-      <div class="card">
-        <h2 class="card-title">Storing Guest Data</h2>
-        <p class="card-desc">
-          Call <code>window.formAutofill</code> from any client component on an allowed site.
-          The function returns a Promise that resolves on success or rejects with a descriptive error.
-        </p>
-        <pre class="code-block"><code>// From your hotel management system / PMS client component
+          <pre
+            class="code-block"
+          ><code>// From your hotel management system / PMS client component
 try {
   await window.formAutofill({
     data: {
@@ -111,8 +126,6 @@ try {
       room_no:    "306",
       checkin_date:  "03-06-2023",
       checkin_time:  "14:00",
-      checkout_date: "04-06-2023",
-      checkout_time: "12:00",
       child:  0,
       adult:  2,
       vehicle_type: "Other",
@@ -135,197 +148,237 @@ try {
     console.error("Select field value not in page options:", err.message);
   }
 }</code></pre>
-      </div>
+        </div>
 
-      <div class="card">
-        <h2 class="card-title">Reading Stored Entries</h2>
-        <p class="card-desc">
-          Use <code>window.formAutofill.getEntries()</code> to retrieve all currently stored
-          guest entries from your PMS client code. Entries are returned oldest-first.
-        </p>
-        <pre class="code-block"><code>const { entries } = await window.formAutofill.getEntries();
+        <div class="card">
+          <h2 class="card-title">Reading Stored Entries</h2>
+          <p class="card-desc">
+            Use <code>window.formAutofill.getEntries()</code> to retrieve all
+            currently stored guest entries from your PMS client code. Entries
+            are returned oldest-first.
+          </p>
+          <pre
+            class="code-block"
+          ><code>const { entries } = await window.formAutofill.getEntries();
 // entries: array of guest objects in insertion order (oldest first)
 console.log(entries.length); // 0–5</code></pre>
-        <div class="table-wrap">
-          <table class="dev-table">
-            <thead>
-              <tr><th>Outcome</th><th>Result</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Success</td>
-                <td><code>Promise</code> resolves <code>{ entries: [...] }</code></td>
-              </tr>
-              <tr>
-                <td>Timeout after 5 s</td>
-                <td><code>throws Error("Form FillBridge: getEntries timed out")</code></td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="dev-table">
+              <thead>
+                <tr>
+                  <th>Outcome</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Success</td>
+                  <td>
+                    <code>Promise</code> resolves
+                    <code>{ entries: [...] }</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Timeout after 5 s</td>
+                  <td>
+                    <code
+                      >throws Error("Form FillBridge: getEntries timed
+                      out")</code
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <h2 class="card-title">Extension Detection</h2>
-        <p class="card-desc">
-          Check whether the extension is installed before calling the API. Two read-only
-          properties are set on the function object at page load.
-        </p>
-        <pre class="code-block"><code>if (window.formAutofill?.isInstalled) {
+        <div class="card">
+          <h2 class="card-title">Extension Detection</h2>
+          <p class="card-desc">
+            Check whether the extension is installed before calling the API. Two
+            read-only properties are set on the function object at page load.
+          </p>
+          <pre class="code-block"><code>if (window.formAutofill?.isInstalled) {
   console.log("Extension active, version:", window.formAutofill.version);
 } else {
   // prompt the user to install the extension
 }</code></pre>
-        <div class="table-wrap">
-          <table class="dev-table">
-            <thead>
-              <tr><th>Property</th><th>Value</th></tr>
-            </thead>
-            <tbody>
-              <tr><td><code>window.formAutofill.isInstalled</code></td><td><code>true</code></td></tr>
-              <tr><td><code>window.formAutofill.version</code></td><td><code>"1.0.0"</code></td></tr>
-            </tbody>
-          </table>
+          <div class="table-wrap">
+            <table class="dev-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>window.formAutofill.isInstalled</code></td>
+                  <td><code>true</code></td>
+                </tr>
+                <tr>
+                  <td><code>window.formAutofill.version</code></td>
+                  <td><code>"1.0.0"</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <h2 class="card-title">Return Values — window.formAutofill()</h2>
-        <div class="table-wrap">
-          <table class="dev-table">
-            <thead>
-              <tr>
-                <th>Outcome</th>
-                <th>Result</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Entry saved</td>
-                <td><code>{ success: true }</code></td>
-              </tr>
-              <tr>
-                <td>Same name + check-in date already stored</td>
-                <td><code>throws Error("data exist")</code></td>
-              </tr>
-              <tr>
-                <td>Select field value not in page options</td>
-                <td><code>throws Error('"value" is not a valid option for "field"')</code></td>
-              </tr>
-              <tr>
-                <td>Extension not responding (10 s)</td>
-                <td><code>throws Error("Form FillBridge: request timed out")</code></td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="card">
+          <h2 class="card-title">Return Values — window.formAutofill()</h2>
+          <div class="table-wrap">
+            <table class="dev-table">
+              <thead>
+                <tr>
+                  <th>Outcome</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Entry saved</td>
+                  <td><code>{ success: true }</code></td>
+                </tr>
+                <tr>
+                  <td>Same name + check-in date already stored</td>
+                  <td><code>throws Error("data exist")</code></td>
+                </tr>
+                <tr>
+                  <td>Select field value not in page options</td>
+                  <td>
+                    <code
+                      >throws Error('"value" is not a valid option for
+                      "field"')</code
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Extension not responding (10 s)</td>
+                  <td>
+                    <code
+                      >throws Error("Form FillBridge: request timed out")</code
+                    >
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      <div class="card">
-        <h2 class="card-title">Storage Behaviour</h2>
-        <p class="card-desc">
-          Up to <strong>5 entries</strong> are stored locally in the browser via
-          <code>chrome.storage.local</code>. When a sixth entry is added the oldest one is
-          overwritten (circular buffer). Duplicate detection compares
-          <strong>first_name + last_name + checkin_date</strong> (case-insensitive).
-        </p>
-      </div>
+        <div class="card">
+          <h2 class="card-title">Storage Behaviour</h2>
+          <p class="card-desc">
+            Up to <strong>5 entries</strong> are stored locally in the browser
+            via <code>chrome.storage.local</code>. When a sixth entry is added
+            the oldest one is overwritten (circular buffer). Duplicate detection
+            compares
+            <strong>first_name + last_name + checkin_date</strong>
+            (case-insensitive).
+          </p>
+        </div>
 
-      <div class="card">
-        <h2 class="card-title">Lazy-Loaded Dropdowns</h2>
-        <p class="card-desc">
-          The fields <code>country</code>, <code>state</code>, and <code>doc_type</code> use
-          Bootstrap Select dropdowns whose options load dynamically. The extension handles these
-          automatically:
-        </p>
-        <ol class="help-steps">
-          <li>
-            <strong>country</strong> is filled first — the dropdown is opened, the value is typed
-            into the live-search box, and the best matching option is clicked.
-          </li>
-          <li>
-            A <strong>1.5 s delay</strong> follows to allow the page's AJAX cascade to reload
-            the state list.
-          </li>
-          <li>
-            <strong>state</strong> is filled next using the same search-and-click approach.
-          </li>
-          <li>
-            <strong>doc_type</strong> is filled last.
-          </li>
-        </ol>
-        <p class="card-desc">
-          Option matching prefers an exact text match, then a starts-with match, then the first
-          visible item. Hidden items (filtered out by live-search) are skipped automatically.
-        </p>
-      </div>
-    </section>
+        <div class="card">
+          <h2 class="card-title">Lazy-Loaded Dropdowns</h2>
+          <p class="card-desc">
+            The fields <code>country</code>, <code>state</code>, and
+            <code>doc_type</code> use Bootstrap Select dropdowns whose options
+            load dynamically. The extension handles these automatically:
+          </p>
+          <ol class="help-steps">
+            <li>
+              <strong>country</strong> is filled first — the dropdown is opened,
+              the value is typed into the live-search box, and the best matching
+              option is clicked.
+            </li>
+            <li>
+              A <strong>1.5 s delay</strong> follows to allow the page's AJAX
+              cascade to reload the state list.
+            </li>
+            <li>
+              <strong>state</strong> is filled next using the same
+              search-and-click approach.
+            </li>
+            <li><strong>doc_type</strong> is filled last.</li>
+          </ol>
+          <p class="card-desc">
+            Option matching prefers an exact text match, then a starts-with
+            match, then the first visible item. Hidden items (filtered out by
+            live-search) are skipped automatically.
+          </p>
+        </div>
+      </section>
 
-    <!-- Help -->
-    <section class="tab" id="tab-help">
-      <h1 class="tab-title">Help</h1>
+      <!-- Help -->
+      <section class="tab" id="tab-help">
+        <h1 class="tab-title">Help</h1>
 
-      <div class="card">
-        <h2 class="card-title">How to use Form FillBridge</h2>
-        <ol class="help-steps">
-          <li>
-            <strong>Store guest data</strong>
-            <p>
-              From your hotel management system, call
-              <code>window.formAutofill({ data: … })</code> to save a guest record.
-              Up to 5 records are stored locally in your browser.
-            </p>
-          </li>
-          <li>
-            <strong>Navigate to pathik.guru</strong>
-            <p>Open the guest registration form on pathik.guru.</p>
-          </li>
-          <li>
-            <strong>Right-click on the page</strong>
-            <p>Right-click anywhere on the form and select <em>"Autofill Form"</em> from the context menu.</p>
-          </li>
-          <li>
-            <strong>Select a guest</strong>
-            <p>
-              A panel appears showing your saved guest entries (newest first).
-              Click a guest to fill all matching form fields automatically.
-            </p>
-          </li>
-        </ol>
-      </div>
+        <div class="card">
+          <h2 class="card-title">How to use Form FillBridge</h2>
+          <ol class="help-steps">
+            <li>
+              <strong>Store guest data</strong>
+              <p>
+                From your hotel management system, call
+                <code>window.formAutofill({ data: … })</code> to save a guest
+                record. Up to 5 records are stored locally in your browser.
+              </p>
+            </li>
+            <li>
+              <strong>Navigate to pathik.guru</strong>
+              <p>Open the guest registration form on pathik.guru.</p>
+            </li>
+            <li>
+              <strong>Right-click on the page</strong>
+              <p>
+                Right-click anywhere on the form and select
+                <em>"Autofill Form"</em> from the context menu.
+              </p>
+            </li>
+            <li>
+              <strong>Select a guest</strong>
+              <p>
+                A panel appears showing your saved guest entries (newest first).
+                Click a guest to fill all matching form fields automatically.
+              </p>
+            </li>
+          </ol>
+        </div>
 
-      <div class="card">
-        <h2 class="card-title">Troubleshooting</h2>
-        <dl class="faq">
-          <dt>"Autofill Form" doesn't appear in the right-click menu</dt>
-          <dd>
-            Make sure the current domain is listed in
-            <a href="#" data-goto="settings">Settings → Allowed Websites</a>.
-          </dd>
+        <div class="card">
+          <h2 class="card-title">Troubleshooting</h2>
+          <dl class="faq">
+            <dt>"Autofill Form" doesn't appear in the right-click menu</dt>
+            <dd>
+              Make sure the current domain is listed in
+              <a href="#" data-goto="settings">Settings → Allowed Websites</a>.
+            </dd>
 
-          <dt>Form fields aren't being filled</dt>
-          <dd>
-            The extension matches fields by their <code>name</code> attribute.
-            If pathik.guru updates their form structure the selectors may need adjusting.
-          </dd>
+            <dt>Form fields aren't being filled</dt>
+            <dd>
+              The extension matches fields by their <code>name</code> attribute.
+              If pathik.guru updates their form structure the selectors may need
+              adjusting.
+            </dd>
 
-          <dt>I get <code>"data exist"</code> error</dt>
-          <dd>
-            A guest with the same name and check-in date is already stored.
-            Entries are overwritten in order once 5 are stored — the oldest will be replaced next.
-          </dd>
+            <dt>I get <code>"data exist"</code> error</dt>
+            <dd>
+              A guest with the same name and check-in date is already stored.
+              Entries are overwritten in order once 5 are stored — the oldest
+              will be replaced next.
+            </dd>
 
-          <dt>The extension is not working on my site</dt>
-          <dd>
-            Add your domain in <a href="#" data-goto="settings">Settings → Allowed Websites</a>
-            and reload the page.
-          </dd>
-        </dl>
-      </div>
-    </section>
+            <dt>The extension is not working on my site</dt>
+            <dd>
+              Add your domain in
+              <a href="#" data-goto="settings">Settings → Allowed Websites</a>
+              and reload the page.
+            </dd>
+          </dl>
+        </div>
+      </section>
+    </main>
 
-  </main>
-
-  <script src="options.js"></script>
-</body>
+    <script src="options.js"></script>
+  </body>
 </html>
