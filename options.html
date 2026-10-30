@@ -106,7 +106,9 @@
 try {
   await window.formAutofill({
     data: {
+      prefix:     "Ms",
       first_name: "Kajal",
+      middle_name: "Khengar",
       last_name:  "Gangani",
       email:      "guest@example.com",
       mobile_no:  "9820355183",
@@ -273,7 +275,7 @@ console.log(entries.length); // 0–5</code></pre>
             via <code>chrome.storage.local</code>. When a sixth entry is added
             the oldest one is overwritten (circular buffer). Duplicate detection
             compares
-            <strong>first_name + last_name + checkin_date</strong>
+            <strong>first_name + middle_name + last_name + checkin_date</strong>
             (case-insensitive).
           </p>
         </div>

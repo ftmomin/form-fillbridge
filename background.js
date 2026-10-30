@@ -42,7 +42,7 @@ async function rebuildFullMenu() {
     );
   } else {
     displayed.forEach((entry, i) => {
-      const name = [entry.first_name, entry.last_name].filter(Boolean).join(" ") || "—";
+      const name = [entry.prefix, entry.first_name, entry.middle_name, entry.last_name].filter(Boolean).join(" ") || "—";
       const date = entry.checkin_date ?? "—";
       chrome.contextMenus.create(
         { id: `${ENTRY_PREFIX}${i}`, parentId: PARENT_ID, title: `${name}  ·  Check-in: ${date}`, contexts: ["all"] },
@@ -111,6 +111,7 @@ async function getState() {
 function makeKey(entry) {
   return [
     (entry?.first_name   ?? "").trim().toLowerCase(),
+    (entry?.middle_name  ?? "").trim().toLowerCase(),
     (entry?.last_name    ?? "").trim().toLowerCase(),
     (entry?.checkin_date ?? ""),
   ].join("|");

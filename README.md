@@ -42,7 +42,9 @@ Call `window.formAutofill` from any client component on an allowed site:
 try {
   await window.formAutofill({
     data: {
+      prefix: 'Ms',
       first_name: 'Kajal',
+      middle_name: 'Khengar',
       last_name: 'Gangani',
       email: 'guest@example.com',
       mobile_no: '9820355183',
@@ -143,9 +145,9 @@ console.log(window.formAutofill.version); // "1.0.0"
 
 **Capacity:** Up to 5 entries in `chrome.storage.local`. The 6th entry overwrites the oldest (circular buffer).
 
-**Duplicate check:** compares `first_name + last_name + checkin_date` (case-insensitive).
+**Duplicate check:** compares `first_name + middle_name + last_name + checkin_date` (case-insensitive).
 
-**Form filling:** Each data key is matched to a form input by its `name` attribute (`[name="key"]`), then by `id`. Works on any website, not just pathik.guru.
+**Form filling:** Every data key is filled into the form control (`input`, `select`, `textarea`) whose `name` attribute matches it, falling back to `id`. Keys with no matching field are skipped, so new fields work without extension changes. Radio groups are matched by value or label text. A lone checkbox is checked by a truthy value (`false`/`0`/`no`/`off` unchecks it), and a checkbox group takes an array of values. An array of objects (e.g. `other_guests`) fills repeated rows named `field_N` (1-based), `key[i][field]`, or the i-th `field[]`. Works on any website, not just pathik.guru.
 
 **Lazy-loaded dropdowns:** `country`, `state`, and `doc_type` are filled via search-based dropdown interaction to handle Bootstrap Select widgets. `country` is always filled before `state` so that state options load correctly from the AJAX cascade.
 

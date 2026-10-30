@@ -140,7 +140,9 @@ const MAX_ENTRIES = 5;
 
 const SAMPLE_GUESTS = [
   {
+    prefix: 'Ms',
     first_name: 'Kajal',
+    middle_name: 'Khengar',
     last_name: 'Gangani',
     email: 'kajal.gangani@example.com',
     mobile_no: '9820355183',
@@ -249,7 +251,9 @@ function showTestStatus(msg, isError = false) {
 }
 
 const FIELD_LABELS = {
+  prefix: 'Prefix',
   first_name: 'First Name',
+  middle_name: 'Middle Name',
   last_name: 'Last Name',
   email: 'Email',
   mobile_no: 'Mobile',
@@ -296,7 +300,7 @@ async function renderEntries() {
     const idx = (head - count + i + MAX_ENTRIES) % MAX_ENTRIES;
     const entry = buffer[idx];
     const name =
-      [entry.first_name, entry.last_name].filter(Boolean).join(' ') || '—';
+      [entry.prefix, entry.first_name, entry.middle_name, entry.last_name].filter(Boolean).join(' ') || '—';
 
     const card = document.createElement('div');
     card.className = 'entry-card';

@@ -78,7 +78,11 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
 });
 
 // Keys that are internal / non-form fields — skip when filling
-const SKIP_KEYS = new Set(['other_guests', 'action', '_savedAt']);
+const SKIP_KEYS = new Set(['action', '_savedAt']);
+
+// Fillable controls only — never buttons, file inputs, or non-form elements like <meta name>
+const FORM_CONTROL =
+  'input:not([type=file],[type=submit],[type=button],[type=reset],[type=image]), select, textarea';
 
 // Fields whose options load lazily on click — click first, wait, then fill
 const LAZY_FIELDS = new Set(['country', 'state', 'doc_type']);
@@ -95,7 +99,7 @@ function sleep(ms) {
 function invalidSelectField(data) {
   for (const [key, value] of Object.entries(data)) {
     if (value === undefined || value === null || value === '') continue;
-    const el = document.querySelector(`[name="${key}"]`);
+    const el = findFields(key)[0];
     if (!el || el.tagName.toLowerCase() !== 'select') continue;
     const val = String(value).toLowerCase().trim();
     const ok = Array.from(el.options).some(
@@ -250,31 +254,91 @@ async function fillLazyField(el, value) {
   }
 }
 
-// Find the first element matching any of the given selectors
-function queryAny(...selectors) {
-  for (const sel of selectors) {
-    const el = document.querySelector(sel);
-    if (el) return el;
+// All form controls with this name (radio/checkbox groups share one), else the one with this id.
+// getElementsByName/getElementById need no selector escaping, so any key is safe.
+function findFields(key) {
+  const byName = [...document.getElementsByName(key)].filter((el) => el.matches(FORM_CONTROL));
+  if (byName.length) return byName;
+  const byId = document.getElementById(key);
+  return byId?.matches(FORM_CONTROL) ? [byId] : [];
+}
+
+const isObject = (v) => v !== null && typeof v === 'object' && !Array.isArray(v);
+const isBlank = (v) => v === undefined || v === null || v === '';
+const same = (a, b) => String(a).toLowerCase().trim() === String(b).toLowerCase().trim();
+
+// Fill a set of same-named controls: radio group, checkbox(es), or a single field.
+// click() (not .checked =) so frameworks see the input/change events.
+function fillGroup(els, value) {
+  const type = els[0].type;
+
+  if (type === 'radio') {
+    const el = els.find(
+      (e) => same(e.value, value) || [...e.labels].some((l) => same(l.textContent, value)),
+    );
+    if (!el) return false;
+    if (!el.checked) el.click();
+    return true;
   }
-  return null;
+
+  if (type === 'checkbox') {
+    // Lone checkbox + scalar → on/off flag; otherwise check boxes whose value is listed
+    const flag = els.length === 1 && !Array.isArray(value);
+    const wanted = [value].flat();
+    els.forEach((e) => {
+      const on = flag
+        ? !/^(false|0|no|off)$/i.test(String(value).trim())
+        : wanted.some((v) => same(e.value, v));
+      if (e.checked !== on) e.click();
+    });
+    return true;
+  }
+
+  return fillField(els[0], value);
+}
+
+// Repeated rows (e.g. other_guests: [{...}, {...}]) — row i's field is named
+// field_N (1-based), key[i][field], or the i-th field[]
+function fillRows(key, rows) {
+  let filled = 0;
+  rows.forEach((row, i) => {
+    if (!isObject(row)) return;
+    for (const [field, val] of Object.entries(row)) {
+      if (isBlank(val) || typeof val === 'object') continue;
+      const els = [
+        findFields(`${field}_${i + 1}`),
+        findFields(`${key}[${i}][${field}]`),
+        findFields(`${field}[]`).slice(i, i + 1),
+      ].find((e) => e.length);
+      if (els && fillGroup(els, val)) filled++;
+    }
+  });
+  return filled;
 }
 
 async function fillForm(data) {
   let filled = 0;
   const lazyMap = new Map(); // key → [el, value]
+  const rowKeys = [];
 
   for (const [key, value] of Object.entries(data)) {
     if (SKIP_KEYS.has(key)) continue;
-    if (value === undefined || value === null || value === '') continue;
+    if (isBlank(value)) continue;
 
-    // Match by name attribute (primary), then by id
-    const el = queryAny(`[name="${key}"]`, `#${key}`);
-    if (!el) continue;
+    if (Array.isArray(value) && value.some(isObject)) {
+      rowKeys.push(key);
+      continue;
+    }
+    // ponytail: nested objects aren't mapped; flatten to key[sub] names if a form needs it
+    if (isObject(value)) continue;
+
+    const els = findFields(key);
+    if (!els.length) continue;
 
     if (LAZY_FIELDS.has(key)) {
-      lazyMap.set(key, [el, value]);
+      lazyMap.set(key, [els[0], value]);
     } else {
-      if (fillField(el, value)) filled++;
+      if (fillGroup(els, value)) filled++;
     }
   }
 
@@ -288,26 +352,8 @@ async function fillForm(data) {
     if (key === 'country') await sleep(1500);
   }
 
-  // Additional guest rows — field names use a _N suffix or bracket notation
-  if (Array.isArray(data.other_guests)) {
-    data.other_guests.forEach((guest, i) => {
-      const n = i + 1;
-      const pairs = [
-        ['other_full_name', guest.other_full_name],
-        ['other_mobile_number', guest.other_mobile_number],
-        ['other_doc_type', guest.other_doc_type],
-        ['other_document_number', guest.other_document_number],
-      ];
-      pairs.forEach(([field, val]) => {
-        const el = queryAny(
-          `[name="${field}_${n}"]`,
-          `[name="${field}[]"]`,
-          `[name="other_guests[${i}][${field}]"]`,
-        );
-        if (el && fillField(el, val)) filled++;
-      });
-    });
-  }
+  // Rows last, as before — gives the page time to render rows (e.g. after adult count changes)
+  for (const key of rowKeys) filled += fillRows(key, data[key]);
 
   return filled;
 }
